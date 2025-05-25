@@ -57,3 +57,9 @@ jobs:
   with:
     version: '4.2.0'
     export-templates: true
+
+- name: Run 100-year headless simulation
+  run: |
+    ${{ env.GODOT }} \
+      --headless \
+      -s res://tests/run_100yrs.gd
