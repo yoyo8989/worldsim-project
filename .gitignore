@@ -1,5 +1,2 @@
-# Ignore pytest cache
-.pytest_cache/
-
-# Ignore tests folder
-tests/
+# Godot 4+ specific ignores
+.godot/
