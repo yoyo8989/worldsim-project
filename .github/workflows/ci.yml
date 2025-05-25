@@ -1,0 +1,53 @@
+name: CI
+
+on: [push, pull_request]  # プッシュとプルリクエストで起動させる設定
+:contentReference[oaicite:4]{index=4}
+
+jobs:
+  test:
+    runs-on: windows-latest  # Windows ランナー上で実行
+    :contentReference[oaicite:5]{index=5}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4  # コードをチェックアウトするステップ
+      :contentReference[oaicite:6]{index=6}
+
+      - name: Setup Python & cache Poetry deps
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'   # Python 3.12 を使う指定
+          cache: 'poetry'          # Poetry 仮想環境をキャッシュ
+      :contentReference[oaicite:7]{index=7}
+
+      - name: Install dependencies
+        run: |
+          poetry install         # 依存をインストール
+      :contentReference[oaicite:8]{index=8}
+
+      - name: Cache Godot binary
+        uses: actions/cache@v3
+        with:
+          path: C:/godot          # Godot ZIP 展開先をキャッシュ
+          key: ${{ runner.os }}-godot-${{ hashFiles('**/Godot_v4.2-*.zip') }}
+          restore-keys: |
+            ${{ runner.os }}-godot-
+      :contentReference[oaicite:9]{index=9}
+
+      - name: Setup Godot (headless + templates)
+        uses: Chickensoft/setup-godot-action@v1
+        with:
+          version: '4.2.0'         # Godot 4.2 を指定
+          export-templates: true   # ヘッドレス & エクスポートテンプレート導入
+      :contentReference[oaicite:10]{index=10}
+
+      - name: Run pytest
+        run: poetry run pytest    # Python 側ユニットテストを実行
+      :contentReference[oaicite:11]{index=11}
+
+      - name: Run 100-year headless simulation
+        run: |
+          C:/godot/Godot_v4.2-stable_win64.exe \
+            --headless \
+            -s res://tests/run_100yrs.gd  # GDScript テストを実行
+      :contentReference[oaicite:12]{index=12}
