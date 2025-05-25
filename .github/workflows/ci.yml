@@ -54,7 +54,6 @@ jobs:
         run: poetry run pytest
 
       - name: Run 100-year headless simulation
-        run: |
-          ${{ env.GODOT }} \
-            --headless \
-            -s res://tests/run_100yrs.gd
+  	run: |
+    	  & "$env:GODOT" --headless -s res://tests/run_100yrs.gd
+
