@@ -54,6 +54,10 @@ jobs:
         run: poetry run pytest
 
       - name: Run 100-year headless simulation
-  	run: |
-    	  & "$env:GODOT" --headless -s res://tests/run_100yrs.gd
+        shell: pwsh      # PowerShell を明示
+        run: |           # ブロック構文開始。この次の行は「2スペース」下げる
+          # 「&」で外部コマンドを呼び出し、"$env:GODOT" でパスを展開
+          & "$env:GODOT" `
+            --headless `
+            -s res://tests/run_100yrs.gd
 
