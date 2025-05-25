@@ -16,6 +16,10 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'poetry'
+      
+      - name: Install Poetry
+        run: pip install poetry
+
 
       - name: Install dependencies
         run: poetry install
