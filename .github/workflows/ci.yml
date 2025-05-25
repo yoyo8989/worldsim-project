@@ -37,7 +37,7 @@ jobs:
           poetry install
 
       - name: Install pytest
-  	run: pip install pytest
+         run: pip install pytest
 
       - name: Cache Godot binary
         uses: actions/cache@v3
