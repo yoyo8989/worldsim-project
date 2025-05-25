@@ -25,7 +25,7 @@ jobs:
       - name: Cache Poetry packages
         uses: actions/cache@v3
         with:
-          path: ~/.cache/pypoetry
+          path: C:/Users/runneradmin/AppData/Local/pypoetry/Cache
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
           restore-keys: |
             ${{ runner.os }}-poetry-
@@ -42,7 +42,7 @@ jobs:
       - name: Cache Godot binary
         uses: actions/cache@v3
         with:
-          path: C:/godot
+          path: C:\Users\kozin\Documents\Projects\godot
           key: ${{ runner.os }}-godot-${{ hashFiles('**/Godot_v4.2-*.zip') }}
           restore-keys: |
             ${{ runner.os }}-godot-
@@ -52,6 +52,7 @@ jobs:
         with:
           version: '4.2.0'
           export-templates: true
+          include-templates: true
 
       - name: Run pytest
         run: poetry run pytest
