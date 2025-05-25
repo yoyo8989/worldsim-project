@@ -5,24 +5,36 @@ on:
 
 jobs:
   test:
-    runs-on: windows-latest  # Windows Runner
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4    # コードをチェックアウト
+        uses: actions/checkout@v4
 
-      - name: Setup Python & cache Poetry deps
+      # ① Python のみセットアップ (キャッシュは外す)
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'poetry'
-      
+
+      # ② Poetry 本体をインストール
       - name: Install Poetry
         run: pip install poetry
 
+      # ③ 依存キャッシュ (任意)
+      - name: Cache Poetry packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
 
+      # ④ プロジェクト依存をインストール
       - name: Install dependencies
-        run: poetry install
+        run: |
+          poetry config virtualenvs.in-project true
+          poetry install
 
       - name: Cache Godot binary
         uses: actions/cache@v3
