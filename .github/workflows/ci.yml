@@ -51,3 +51,9 @@ jobs:
             --headless \
             -s res://tests/run_100yrs.gd  # GDScript テストを実行
       :contentReference[oaicite:12]{index=12}
+
+- name: Setup Godot (headless + export templates)
+  uses: chickensoft-games/setup-godot-action@v2.2.0
+  with:
+    version: '4.2.0'
+    export-templates: true
