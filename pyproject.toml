@@ -11,6 +11,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = ">=3.12"
 requests = ">=2.32.3,<3.0.0"
+numpy = "^2.2.6"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
