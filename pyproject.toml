@@ -1,22 +1,21 @@
-[project]
+[tool.poetry]
 name = "worldsim-project"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "Your Name",email = "you@example.com"}
-]
+authors = ["Your Name <you@example.com>"]
 readme = "README.md"
-requires-python = ">=3.12"
-dependencies = [
-    "requests (>=2.32.3,<3.0.0)"
-]
+license = "MIT"
+# Python バージョン要件はここに書いてもよいです
+# requires-python = ">=3.12"
 
+[tool.poetry.dependencies]
+python = ">=3.12"
+requests = ">=2.32.3,<3.0.0"
+numpy = "^2.2.6"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.5"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry]
-name = "worldsim-project"
-version = "0.1.0"
-readme = "README.md"

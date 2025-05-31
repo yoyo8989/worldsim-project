@@ -1,2 +1,26 @@
 # Godot 4+ specific ignores
 .godot/
+my_pytest_cache/
+
+# Python キャッシュ関連
+__pycache__/
+*.pyc
+
+# Jupyter Notebook チェックポイント
+.ipynb_checkpoints/
+
+# Pytest キャッシュ
+.pytest_cache/
+
+# Godot プロジェクトのローカル設定（例: .import や .mono ）
+.import/
+.mono/
+
+# OS 固有の一時ファイル
+.DS_Store
+Thumbs.db
+
+# その他ビルド成果物／一時ディレクトリがあればここに追記
+node_modules/
+dist/
+build/

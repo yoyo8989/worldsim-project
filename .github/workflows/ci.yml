@@ -1,45 +1,60 @@
 name: CI
 
 on:
-  [push, pull_request]   # プッシュ／PR で起動
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
 
 jobs:
-  test:
+  # 1) Python テストジョブ (Windows ランナー + Poetry)
+  test-python:
+    name: 🐍 Python Tests
     runs-on: windows-latest
-
+    strategy:
+      matrix:
+        python-version: [3.12]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ① Python のみセットアップ (キャッシュは外す)
-      - name: Setup Python
+      - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: ${{ matrix.python-version }}
 
-      # ② Poetry 本体をインストール
       - name: Install Poetry
         run: pip install poetry
 
-      # ③ 依存キャッシュ (任意)
       - name: Cache Poetry packages
         uses: actions/cache@v3
         with:
-          path: ~/.cache/pypoetry
+          path: C:/Users/runneradmin/AppData/Local/pypoetry/Cache
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
           restore-keys: |
             ${{ runner.os }}-poetry-
 
-      # ④ プロジェクト依存をインストール
       - name: Install dependencies
         run: |
           poetry config virtualenvs.in-project true
-          poetry install
+          poetry install --no-interaction --no-ansi
+
+      - name: Run pytest
+        run: poetry run pytest --maxfail=1 --disable-warnings -q
+
+  # 2) GDScript リントジョブ (headless Godot)
+  lint-gdscript:
+    name: 🛠 GDScript Lint
+    runs-on: windows-latest
+    needs: test-python
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Cache Godot binary
         uses: actions/cache@v3
         with:
-          path: C:/godot
+          path: C:\\Users\\kozin\\Documents\\Projects\\godot
           key: ${{ runner.os }}-godot-${{ hashFiles('**/Godot_v4.2-*.zip') }}
           restore-keys: |
             ${{ runner.os }}-godot-
@@ -48,13 +63,26 @@ jobs:
         uses: chickensoft-games/setup-godot@v2.2.0
         with:
           version: '4.2.0'
-          export-templates: true
+          include-templates: true
 
-      - name: Run pytest
-        run: poetry run pytest
+      - name: Run GDScript Lint
+        shell: pwsh
+        run: |
+          & "$env:GODOT" --headless --no-window --check project.godot
 
       - name: Run 100-year headless simulation
+        shell: pwsh
         run: |
-          ${{ env.GODOT }} \
-            --headless \
+          & "$env:GODOT" `
+            --headless `
             -s res://tests/run_100yrs.gd
+
+  # 3) 完了サマリー
+  summary:
+    name: ✅ Summary
+    runs-on: windows-latest
+    needs: [test-python, lint-gdscript]
+    steps:
+      - name: Show results
+        run: echo "All checks and lint passed successfully!"
+        
